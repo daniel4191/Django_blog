@@ -1,7 +1,3 @@
-
-## 2. created personal blog
-
-
 ## 1.개발환경
 <hr>
 <br>
