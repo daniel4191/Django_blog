@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% comment %} warning!! important things!
+what i tried comment blocks used before extends. but comming out error
+that error messege's meaning simply like this 'if you use extends,then must use extends on first line' {% endcomment %}
+
+{% comment %} can use after add to setting for global templates 
+more correct place is global project - settings - TEMPLATES area's DIRS{% endcomment %}
+
+{% load static %}
+
+{% block title %}
+    Daniel's Blog
+{% endblock  %}
+
+{% comment %} conbine with css from app standards {% endcomment %}
+{% block css_files %}
+    <link rel="stylesheet" href="{% static 'blog/post.css' %}">
+    <link rel="stylesheet" href="{% static 'blog/index.css' %}">
+{% endblock  %}
+
+{% block content %}
+    <section id="welcome">
+        <header>
+            <img src="{% static 'blog/images/picture.jpeg' %}" alt="Daniel - The Author Of This Blog">
+            <h2>Daniel's Blog</h2>
+        </header>
+        <p>Hi, I am Daniel and thanks for coming my web blog</p>
+    </section>
+
+    <section id="latest-posts">
+        <h2>My Latest Posts lists</h2>
+
+        <ul>
+            {% for post in posts %}
+                {% include "blog/includes/post.html" %}
+            {% endfor %}
+        </ul>
+    </section>
+
+    <section id="about">
+        <h2>What i do</h2>
+        <p>i love read books, and love programming too and i enjoy using and developing knoklogies what i known already</p>
+        <p>My goal is to keep growing as be developer and oneday creating help service for other people and for me</p>
+    </section>
+{% endblock  %}

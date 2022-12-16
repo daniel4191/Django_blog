@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    {% comment %} My Posts {% endcomment %}
+    {{ post.title }}
+{% endblock  %}
+
+{% comment %} conbine with css from app standards {% endcomment %}
+{% block css_files %}
+    <link rel="stylesheet" href="{% static 'blog/post.css' %}">
+    <link rel="stylesheet" href="{% static 'blog/index.css' %}">
+    <link rel="stylesheet" href="{% static 'blog/post-detail.css' %}">
+{% endblock  %}
+
+{% block content %}
+    <section id="all-posts">
+        <h2>My Collected Posts</h2>
+
+        <ul>
+            {% for post in all_posts %}
+                {% include "blog/includes/post.html" %}
+            {% endfor %}
+        </ul>
+    </section>
+{% endblock  %}

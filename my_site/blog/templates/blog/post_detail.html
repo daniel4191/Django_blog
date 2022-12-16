@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    {{ post.title }}
+{% endblock  %}
+
+{% comment %} conbine with css from app standards {% endcomment %}
+{% block css_files %}
+    <link rel="stylesheet" href="{% static 'blog/post-detail.css' %}">
+{% endblock  %}
+
+{% block content %}
+    {% if comment_form.errors %}
+            <div id="alert">
+                <h2>Saving the comment failed!</h2>
+                <p>Please check the comment form below the post and fix your errors</p>
+                <a href="#comment-form">Fix button</a>
+            </div>
+    {% endif %}
+    <section id="summary">
+        {% comment %} models에 정의된 Post class의 title이다. {% endcomment %}
+        <h2>{{ post.title }}</h2>
+        <div>
+            {% comment %} models에 정의된 Post class의 tags이다. {% endcomment %}
+            {% for tag in post_tags %}
+                {% comment %} models Post class의 tags는 또다른 class tag와 연결이 되어있다. 그 tag의 caption을 가져온다. {% endcomment %}
+                <span class="tag">{{ tag.caption }}</span>
+            {% endfor %}
+        </div>
+        <div id="read-later">
+            <form action="{% url 'read-later' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" value="{{ post.id }}" name="post_id">
+                <button>
+                    {% if saved_for_later %}
+                        Remove from "Read Later" List
+                    {% else %}
+                        Read Later
+                    {% endif %}
+                </button>
+            </form>            
+        </div>
+        <article>
+            {% comment %} <img src="{{ post.image_name }}" alt="{{ post.title }}"> {% endcomment %}
+            {% comment %} mailto를 통해서 해당 하이퍼링크를 누르면 지정된 메일로 메일 발송하게끔 한다. {% endcomment %}
+            <img src="{{ post.image.url }}" alt="{{ post.title }}">
+            <address>By <a href="mailto:{{ post.author.email_address }}">{{ post.author|title }}</a></address>
+            <div>
+                Last Updated on <time>{{ post.date|date:'d M Y' }}</time>
+            </div>
+        </article>
+    </section>
+
+    
+
+    <main>
+        {% comment %} linebreaks는 실제 띄어쓰기, 들여쓰기등을 반영시켜준다. {% endcomment %}
+        {{ post.content|linebreaks }}
+    </main>
+
+    <section id="comments">
+        <ul>
+            {% for comment in comments %}
+                <li>
+                    {% comment %} 최종적으로는 models.py의 것을 가져오니깐 거기에 정의되어있는 명칭이 user_name {% endcomment %}
+                    <h2>{{ comment.user_name }}</h2>
+                    <p>{{ comment.text|linebreaks }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <section id="comment-form">
+        <h2>Your Comment</h2>
+        {% comment %} urls.py에서 path중, name으로 지정된 것을 의미 {% endcomment %}
+        <form action="{% url 'post_detail_page' post.slug %}" method="POST">
+            {% csrf_token %}
+            {% comment %} views.py의 context[]안에 들어가는 것으로 비롯됨 (comment_form) {% endcomment %}
+            {% for form_field in comment_form %}
+            <div class="form-control {% if form_field.errors %}invalid{% endif %}">
+                {{ form_field.label_tag }}
+                {{ form_field }}
+                {{ form_field.errors }}              
+            </div>
+            {% endfor %}
+            <button>Save Comment</button>
+        </form>
+    </section>
+{% endblock  %}
