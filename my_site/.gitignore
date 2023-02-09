@@ -1,0 +1,12 @@
+settings.py
+settings
+__init__.py
+__pycache__/
+*.py[cod]
+
+.Python
+venv/
+
+db.sqlite3
+.DS_Store
+.vscode/
